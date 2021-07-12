@@ -8,6 +8,7 @@ import com.google.android.material.slider.Slider;
 
 import me.minemis.pomodoro.Time;
 import me.minemis.pomodoro.activities.ChooseTimeActivity;
+import me.minemis.pomodoro.activities.MainActivity;
 
 public class SliderTimeListener implements Slider.OnChangeListener {
 
@@ -28,5 +29,8 @@ public class SliderTimeListener implements Slider.OnChangeListener {
         txtSliderValue.setText(String.valueOf(intValue));
 
         Time.setMinutes(intValue);
+
+        MainActivity mainActivity = MainActivity.getInstance();
+        mainActivity.callNewCDM();
     }
 }

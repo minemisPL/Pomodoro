@@ -26,6 +26,14 @@ public class MainActivity extends AppCompatActivity {
 
     private CountdownManager countdownManager;
 
+    @SuppressLint("StaticFieldLeak")
+    private static MainActivity instance;
+
+    public MainActivity() {
+        super();
+        instance = this;
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         Time.setMinutes(40);
 
-        btnNext.setOnClickListener(v -> {
-            countdownManager.resetTimer();
-            countdownManager = null;
-            btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
-            makeNewCountdownManager(Time.getMinutes());
-        });
-
+        btnNext.setOnClickListener(v -> callNewCDM());
     }
 
-    public void makeNewCountdownManager(int minutes) {
+    private void makeNewCountdownManager(int minutes) {
 
         countdownManager = new CountdownManager(this, progressBar, textViewTimer, minutes * 60 * 1000); //1500000
 
@@ -63,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
         btnReset.setOnClickListener(new ImageButtonResetListener(this, countdownManager));
 
         textViewTimer.setOnClickListener(new TextTimerListener(this));
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void callNewCDM() {
+        countdownManager.resetTimer();
+        countdownManager = null;
+        btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
+        makeNewCountdownManager(Time.getMinutes());
     }
 
     public ImageButton getBtnStartPause() {
@@ -81,4 +91,7 @@ public class MainActivity extends AppCompatActivity {
         return text3;
     }
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
 }

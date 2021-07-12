@@ -17,6 +17,11 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
     private Slider slider;
     private TextView txtSliderValue;
+    private final MainActivity mainActivity;
+
+    public ChooseTimeActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,8 +34,6 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
         slider.addOnChangeListener(new SliderTimeListener(this));
 
-        Intent intent = getIntent();
-        intent.putExtra("work_time", 60);
     }
 
     private void setMetrics() {

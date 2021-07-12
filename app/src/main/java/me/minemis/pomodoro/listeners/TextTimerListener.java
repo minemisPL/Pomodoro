@@ -20,3 +20,4 @@ public class TextTimerListener implements View.OnClickListener {
         mainActivity.startActivity(intent);
     }
 }
+
