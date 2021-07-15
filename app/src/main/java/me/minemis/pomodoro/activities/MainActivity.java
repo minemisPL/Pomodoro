@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import me.minemis.pomodoro.CountdownManager;
 import me.minemis.pomodoro.R;
-import me.minemis.pomodoro.Time;
-import me.minemis.pomodoro.listeners.ImageButtonResetListener;
-import me.minemis.pomodoro.listeners.ImageButtonStartPauseListener;
+import me.minemis.pomodoro.RoundManager;
+import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.listeners.ButtonResetListener;
+import me.minemis.pomodoro.listeners.ButtonStartPauseListener;
+import me.minemis.pomodoro.listeners.NextButtonListener;
 import me.minemis.pomodoro.listeners.TextTimerListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("StaticFieldLeak")
     private static MainActivity instance;
+    private static RoundManager roundManager;
 
     public MainActivity() {
         super();
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        roundManager = new RoundManager(this);
+
         textViewTimer = findViewById(R.id.txt_timer);
         btnStartPause = findViewById(R.id.btn_start);
         btnReset = findViewById(R.id.btn_reset);
@@ -50,29 +55,44 @@ public class MainActivity extends AppCompatActivity {
         text2 = findViewById(R.id.textView2);
         text3 = findViewById(R.id.textView3);
 
-        makeNewCountdownManager(25);
-
-        Time.setMinutes(40);
-
-        btnNext.setOnClickListener(v -> callNewCDM());
-    }
-
-    private void makeNewCountdownManager(int minutes) {
-
-        countdownManager = new CountdownManager(this, progressBar, textViewTimer, minutes * 60 * 1000); //1500000
-
-        btnStartPause.setOnClickListener(new ImageButtonStartPauseListener(this, countdownManager));
-        btnReset.setOnClickListener(new ImageButtonResetListener(this, countdownManager));
+        roundManager.nextRound(false);
 
         textViewTimer.setOnClickListener(new TextTimerListener(this));
+
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void callNewCDM() {
-        countdownManager.resetTimer();
-        countdownManager = null;
+    public void makeNewCountdownManager(State state, boolean setStart) {
+
+        if (!(countdownManager == null)){
+            countdownManager.pauseTimer();
+            countdownManager = null;
+        }
+
+        int time = roundManager.getTime(state);
+
+
+        countdownManager = new CountdownManager(MainActivity.this, progressBar, textViewTimer, time * 60 * 1000); //1500000
+
+        btnNext.setOnClickListener(new NextButtonListener(instance, roundManager, countdownManager));
+        btnStartPause.setOnClickListener(new ButtonStartPauseListener(MainActivity.this, countdownManager));
+        btnReset.setOnClickListener(new ButtonResetListener(MainActivity.this, countdownManager));
+
+        if (setStart) {
+            btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+            countdownManager.startTimer();
+            return;
+        }
         btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
-        makeNewCountdownManager(Time.getMinutes());
+    }
+
+    public TextView getTextViewTimer() {
+        return textViewTimer;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
     }
 
     public ImageButton getBtnStartPause() {
@@ -93,5 +113,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static MainActivity getInstance() {
         return instance;
+    }
+
+    public static RoundManager getRoundManager() {
+        return roundManager;
     }
 }

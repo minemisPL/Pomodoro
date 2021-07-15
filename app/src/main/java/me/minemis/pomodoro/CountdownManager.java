@@ -1,6 +1,7 @@
 package me.minemis.pomodoro;
 
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,9 +15,9 @@ public class CountdownManager {
 
     private final long ORIGIN_TIME_IN_MILLIS;
 
-    private final MainActivity mainActivity;
+    private final RoundManager roundManager;
 
-    private TextView text1, text2, text3;
+    private final TextView text1, text2, text3;
 
     private CountDownTimer countDownTimer;
 
@@ -30,11 +31,11 @@ public class CountdownManager {
     private final TextView textViewCountdown;
 
     public CountdownManager(MainActivity mainActivity, ProgressBar progressBar, TextView textViewCountdown, long timeLeftInMillis) {
-        this.mainActivity = mainActivity;
         this.progressBar = progressBar;
         this.textViewCountdown = textViewCountdown;
         this.timeLeftInMillis = timeLeftInMillis;
         this.ORIGIN_TIME_IN_MILLIS = timeLeftInMillis;
+        this.roundManager = MainActivity.getRoundManager();
         updateCountdownText();
         progressBar.setProgress(10000);
         progressPart = 10000 / ((double) timeLeftInMillis / 1000);
@@ -44,6 +45,8 @@ public class CountdownManager {
     }
 
     public void startTimer() {
+        updateCountdownText();
+
         countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -63,7 +66,7 @@ public class CountdownManager {
 
             @Override
             public void onFinish() {
-
+                roundManager.nextRound(true);
             }
         }.start();
 
@@ -77,6 +80,8 @@ public class CountdownManager {
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
         textViewCountdown.setText(timeLeftFormatted);
+
+        System.out.println(timeLeftFormatted);
     }
 
     public void pauseTimer() {
@@ -87,10 +92,6 @@ public class CountdownManager {
         isRunning = false;
     }
 
-    public boolean isRunning() {
-        return isRunning;
-    }
-
     public void resetTimer() {
         pauseTimer();
         timeLeftInMillis = ORIGIN_TIME_IN_MILLIS;
@@ -99,4 +100,7 @@ public class CountdownManager {
         progress = 10000;
     }
 
+    public boolean isRunning() {
+        return isRunning;
+    }
 }

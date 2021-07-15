@@ -1,6 +1,5 @@
 package me.minemis.pomodoro.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.TextView;
@@ -11,17 +10,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.slider.Slider;
 
 import me.minemis.pomodoro.R;
-import me.minemis.pomodoro.listeners.SliderTimeListener;
+import me.minemis.pomodoro.RoundManager;
+import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.listeners.SliderBreakListener;
+import me.minemis.pomodoro.listeners.SliderFocusListener;
 
 public class ChooseTimeActivity extends AppCompatActivity {
 
-    private Slider slider;
-    private TextView txtSliderValue;
-    private final MainActivity mainActivity;
-
-    public ChooseTimeActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
+    private Slider sliderWork, sliderBreak;
+    private TextView txtFocusValue;
+    private TextView txtBreakValue;
+    private RoundManager roundManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,11 +28,31 @@ public class ChooseTimeActivity extends AppCompatActivity {
         setContentView(R.layout.choose_time);
         setMetrics();
 
-        slider = findViewById(R.id.slider_work);
-        txtSliderValue = findViewById(R.id.txt_slider_work_value);
+        roundManager = MainActivity.getRoundManager();
 
-        slider.addOnChangeListener(new SliderTimeListener(this));
+        sliderWork = findViewById(R.id.slider_work);
+        sliderBreak = findViewById(R.id.slider_break);
+        txtFocusValue = findViewById(R.id.txt_slider_work_value);
+        txtBreakValue = findViewById(R.id.txt_slider_brake);
 
+        txtFocusValue.setText(String.valueOf(roundManager.getFocusTime()));
+        sliderWork.setValue(roundManager.getFocusTime());
+
+        txtBreakValue.setText(String.valueOf(roundManager.getTime(State.SHORT_BREAK)));
+        sliderBreak.setValue(roundManager.getTime(State.SHORT_BREAK));
+
+        sliderWork.addOnChangeListener(new SliderFocusListener(this));
+
+        sliderBreak.addOnChangeListener(new SliderBreakListener(this));
+
+    }
+
+    @Override
+    protected void onStop() {
+        State state = MainActivity.getRoundManager().getCurrentState();
+        MainActivity.getInstance().makeNewCountdownManager(state, false);
+
+        super.onStop();
     }
 
     private void setMetrics() {
@@ -46,7 +65,15 @@ public class ChooseTimeActivity extends AppCompatActivity {
         getWindow().setLayout((int) (width * .8), (int) (height * .6));
     }
 
-    public TextView getTxtSliderValue() {
-        return txtSliderValue;
+    public RoundManager getRoundManager() {
+        return roundManager;
+    }
+
+    public TextView getTxtFocusValue() {
+        return txtFocusValue;
+    }
+
+    public TextView getTxtBreakValue() {
+        return txtBreakValue;
     }
 }
