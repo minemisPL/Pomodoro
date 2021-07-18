@@ -17,10 +17,6 @@ public class RoundManager {
         this.mainActivity = mainActivity;
     }
 
-    public int getFocusTime() {
-        return focusTime;
-    }
-
     public void nextRound(boolean setStart) {
         if (currentRound > realRounds) {
             currentRound = 1;
@@ -65,11 +61,19 @@ public class RoundManager {
         this.shortBreakTime = shortBreakTime;
     }
 
+    public void setTime(State state, int value) {
+        switch (state) {
+            case FOCUS: focusTime = value;              break;
+            case SHORT_BREAK: shortBreakTime = value;   break;
+            case LONG_BREAK: longBreakTime = value;     break;
+        }
+    }
+
     public int getTime(State state) {
         switch (state) {
-            case FOCUS: return focusTime;
-            case SHORT_BREAK: return shortBreakTime;
-            case LONG_BREAK: return longBreakTime;
+            case FOCUS:         return focusTime;
+            case SHORT_BREAK:   return shortBreakTime;
+            case LONG_BREAK:    return longBreakTime;
         }
         return 1;
     }

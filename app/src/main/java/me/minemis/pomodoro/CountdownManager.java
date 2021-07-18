@@ -80,8 +80,6 @@ public class CountdownManager {
         String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
         textViewCountdown.setText(timeLeftFormatted);
-
-        System.out.println(timeLeftFormatted);
     }
 
     public void pauseTimer() {

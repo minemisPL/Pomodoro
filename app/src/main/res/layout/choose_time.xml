@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,8 +10,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp">
 
 
         <TextView
@@ -20,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="20dp"
             android:text="25" />
 
         <TextView
@@ -28,9 +27,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/txt_slider_work_value"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:layout_centerHorizontal="true"
-            android:text="Focus time" />
+            android:text="Focus Time" />
 
 
         <com.google.android.material.slider.Slider
@@ -63,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="20dp"
             android:text="5" />
 
         <TextView
@@ -71,9 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/txt_slider_brake"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:layout_centerHorizontal="true"
-            android:text="Brake time" />
+            android:text="Short Brake Time" />
 
 
         <com.google.android.material.slider.Slider
@@ -86,6 +85,47 @@
             android:valueFrom="1"
             android:valueTo="60"
             android:value="5"
+
+            app:labelBehavior="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_slider_long_break"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/layout_slider_break"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/layout_slider_break"
+        app:layout_constraintTop_toBottomOf="@+id/layout_slider_break">
+
+        <TextView
+            android:id="@+id/txt_slider_long_brake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="10" />
+
+        <TextView
+            android:id="@+id/txt_long_brake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txt_slider_long_brake"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="Long Brake Time" />
+
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_long_brake"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/txt_slider_long_brake"
+            android:layout_margin="30dp"
+            android:layout_marginTop="50dp"
+            android:valueFrom="1"
+            android:valueTo="60"
+            android:value="10"
 
             app:labelBehavior="gone" />
     </RelativeLayout>

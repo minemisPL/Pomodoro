@@ -12,10 +12,10 @@ import me.minemis.pomodoro.CountdownManager;
 import me.minemis.pomodoro.R;
 import me.minemis.pomodoro.RoundManager;
 import me.minemis.pomodoro.State;
-import me.minemis.pomodoro.listeners.ButtonResetListener;
-import me.minemis.pomodoro.listeners.ButtonStartPauseListener;
-import me.minemis.pomodoro.listeners.NextButtonListener;
-import me.minemis.pomodoro.listeners.TextTimerListener;
+import me.minemis.pomodoro.listeners.main.ButtonResetListener;
+import me.minemis.pomodoro.listeners.main.ButtonStartPauseListener;
+import me.minemis.pomodoro.listeners.main.NextButtonListener;
+import me.minemis.pomodoro.listeners.main.TextTimerListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnNext;
     private ProgressBar progressBar;
     private TextView text1, text2, text3;
+    private TextView txtCurrentState;
 
     private CountdownManager countdownManager;
 
@@ -42,23 +43,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        roundManager = new RoundManager(this);
-
-        textViewTimer = findViewById(R.id.txt_timer);
-        btnStartPause = findViewById(R.id.btn_start);
-        btnReset = findViewById(R.id.btn_reset);
-        progressBar = findViewById(R.id.progress_bar);
-        btnNext = findViewById(R.id.btn_next_phase);
-
-        text1 = findViewById(R.id.textView);
-        text2 = findViewById(R.id.textView2);
-        text3 = findViewById(R.id.textView3);
+        assignValues();
 
         roundManager.nextRound(false);
-
-        textViewTimer.setOnClickListener(new TextTimerListener(this));
-
 
     }
 
@@ -70,21 +57,37 @@ public class MainActivity extends AppCompatActivity {
             countdownManager = null;
         }
 
-        int time = roundManager.getTime(state);
+        int time =          roundManager.getTime(state);
 
+        countdownManager =  new CountdownManager(this, progressBar, textViewTimer, time * 60 * 1000); //1500000
 
-        countdownManager = new CountdownManager(MainActivity.this, progressBar, textViewTimer, time * 60 * 1000); //1500000
-
-        btnNext.setOnClickListener(new NextButtonListener(instance, roundManager, countdownManager));
-        btnStartPause.setOnClickListener(new ButtonStartPauseListener(MainActivity.this, countdownManager));
-        btnReset.setOnClickListener(new ButtonResetListener(MainActivity.this, countdownManager));
+        btnNext             .setOnClickListener(new NextButtonListener(instance, roundManager, countdownManager));
+        btnStartPause       .setOnClickListener(new ButtonStartPauseListener(MainActivity.this, countdownManager));
+        btnReset            .setOnClickListener(new ButtonResetListener(MainActivity.this, countdownManager));
 
         if (setStart) {
-            btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+            btnStartPause   .setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
             countdownManager.startTimer();
             return;
         }
         btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
+    }
+
+    private void assignValues() {
+        roundManager =      new RoundManager(this);
+
+        textViewTimer =     findViewById(R.id.txt_timer);
+        btnStartPause =     findViewById(R.id.btn_start);
+        btnReset =          findViewById(R.id.btn_reset);
+        progressBar =       findViewById(R.id.progress_bar);
+        btnNext =           findViewById(R.id.btn_next_phase);
+        txtCurrentState =   findViewById(R.id.txt_current_state);
+
+        text1 =             findViewById(R.id.textView);
+        text2 =             findViewById(R.id.textView2);
+        text3 =             findViewById(R.id.textView3);
+
+        textViewTimer       .setOnClickListener(new TextTimerListener(this));
     }
 
     public TextView getTextViewTimer() {
@@ -97,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
     public ImageButton getBtnStartPause() {
         return btnStartPause;
+    }
+
+    public TextView getTxtCurrentState() {
+        return txtCurrentState;
     }
 
     public TextView getText1() {
