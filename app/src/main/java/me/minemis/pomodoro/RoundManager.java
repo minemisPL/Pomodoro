@@ -1,35 +1,28 @@
 package me.minemis.pomodoro;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.minemis.pomodoro.activities.MainActivity;
 
 public class RoundManager {
 
     private final MainActivity mainActivity;
     private int numberOfRounds = 4;
-    private int realRounds = 4 * 2;
     private int currentRound = 1;
-    private State currentState = State.FOCUS;
-    private int focusTime = 25;
-    private int shortBreakTime = 5;
-    private int longBreakTime = 10;
+    private State currentState = State.SHORT_BREAK;
+    private final Map<State, Integer> timeMap = new HashMap<>();
 
     public RoundManager(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
     public void nextRound(boolean setStart) {
-        if (currentRound > realRounds) {
+        if (currentRound > getRealRounds()) {
             currentRound = 1;
         }
 
-        if (currentRound == realRounds) {
-            currentState = State.LONG_BREAK;
-        } else if (currentRound %2 == 1)  {
-            currentState = State.FOCUS;
-        } else {
-            currentState = State.SHORT_BREAK;
-        }
-
+        currentState = getNextState();
         mainActivity.makeNewCountdownManager(currentState, setStart);
         currentRound++;
     }
@@ -38,43 +31,37 @@ public class RoundManager {
         if (currentState == State.SHORT_BREAK || currentState == State.LONG_BREAK) {
             return State.FOCUS;
         }
-        if (currentRound == realRounds) {
+
+        if (currentRound == getRealRounds()) {
             return State.LONG_BREAK;
         }
+
         return State.SHORT_BREAK;
     }
 
     public void setNumberOfRounds(int numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
-        this.realRounds = numberOfRounds * 2;
     }
 
     public State getCurrentState() {
         return currentState;
     }
 
-    public void setFocusTime(int focusTime) {
-        this.focusTime = focusTime;
-    }
-
-    public void setShortBreakTime(int shortBreakTime) {
-        this.shortBreakTime = shortBreakTime;
+    int getRealRounds() {
+        return numberOfRounds * 2;
     }
 
     public void setTime(State state, int value) {
-        switch (state) {
-            case FOCUS: focusTime = value;              break;
-            case SHORT_BREAK: shortBreakTime = value;   break;
-            case LONG_BREAK: longBreakTime = value;     break;
-        }
+        timeMap.put(state, value);
     }
 
     public int getTime(State state) {
-        switch (state) {
-            case FOCUS:         return focusTime;
-            case SHORT_BREAK:   return shortBreakTime;
-            case LONG_BREAK:    return longBreakTime;
+        Integer value = timeMap.get(state);
+
+        if (value == null) {
+            return state.getDefaultValue();
         }
-        return 1;
+
+        return value;
     }
 }

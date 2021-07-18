@@ -13,9 +13,9 @@ public class ButtonStartPauseListener implements View.OnClickListener {
     private final MainActivity mainActivity;
     private final CountdownManager countdownManager;
 
-    public ButtonStartPauseListener(MainActivity mainActivity, CountdownManager countdownManager) {
+    public ButtonStartPauseListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        this.countdownManager = countdownManager;
+        this.countdownManager = mainActivity.getCountdownManager();
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

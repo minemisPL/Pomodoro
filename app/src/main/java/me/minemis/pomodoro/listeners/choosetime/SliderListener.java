@@ -1,8 +1,10 @@
 package me.minemis.pomodoro.listeners.choosetime;
 
+import android.os.Build;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.material.slider.Slider;
 
@@ -17,17 +19,17 @@ public class SliderListener implements Slider.OnChangeListener {
     private final State state;
 
     public SliderListener(ChooseTimeActivity chooseTimeActivity, State state) {
-        txtSliderValue = chooseTimeActivity.getTxtValue(state);
-        roundManager = chooseTimeActivity.getRoundManager();
+        this.txtSliderValue = chooseTimeActivity.getTxtValue(state);
+        this.roundManager = chooseTimeActivity.getRoundManager();
         this.state = state;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-
         int intValue = (int) value;
 
         txtSliderValue.setText(String.valueOf(intValue));
-        roundManager.setTime(state ,intValue);
+        roundManager.setTime(this.state, intValue);
     }
 }

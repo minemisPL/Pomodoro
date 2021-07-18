@@ -20,7 +20,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
     private TextView txtFocusValue, txtBreakValue, txtLongBreakValue;
     private RoundManager roundManager;
     private int focusTime, breakTime, longBreakTime;
-    private static boolean isChanged;
+    private static boolean changed;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,8 +33,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-
-        isChanged = false;
+        changed = false;
 
         State state = roundManager.getCurrentState();
 
@@ -42,21 +41,21 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
             case FOCUS:
                 if ((int) sliderWork.getValue() != focusTime) {
-                    isChanged = true;
+                    changed = true;
                 }   break;
 
             case SHORT_BREAK:
                 if ((int) sliderBreak.getValue() != breakTime) {
-                    isChanged = true;
+                    changed = true;
                 }   break;
 
             case LONG_BREAK:
                 if ((int) sliderLongBreak.getValue() != longBreakTime) {
-                    isChanged = true;
+                    changed = true;
                 }   break;
         }
 
-        if (isChanged) {
+        if (changed) {
             MainActivity.getInstance().makeNewCountdownManager(state, false);
         }
 

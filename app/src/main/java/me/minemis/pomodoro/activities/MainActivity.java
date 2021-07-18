@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
         int time =          roundManager.getTime(state);
 
-        countdownManager =  new CountdownManager(this, progressBar, textViewTimer, time * 60 * 1000); //1500000
+        countdownManager =  new CountdownManager(this, time * 60 * 1000); //1500000
 
-        btnNext             .setOnClickListener(new NextButtonListener(instance, roundManager, countdownManager));
-        btnStartPause       .setOnClickListener(new ButtonStartPauseListener(MainActivity.this, countdownManager));
+        btnNext             .setOnClickListener(new NextButtonListener(instance));
+        btnStartPause       .setOnClickListener(new ButtonStartPauseListener(MainActivity.this));
         btnReset            .setOnClickListener(new ButtonResetListener(MainActivity.this, countdownManager));
 
         if (setStart) {
@@ -88,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
         text3 =             findViewById(R.id.textView3);
 
         textViewTimer       .setOnClickListener(new TextTimerListener(this));
+    }
+
+    public CountdownManager getCountdownManager() {
+        return countdownManager;
     }
 
     public TextView getTextViewTimer() {

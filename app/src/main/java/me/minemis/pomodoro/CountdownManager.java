@@ -1,11 +1,8 @@
 package me.minemis.pomodoro;
 
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.lifecycle.OnLifecycleEvent;
 
 import java.util.Locale;
 
@@ -13,35 +10,34 @@ import me.minemis.pomodoro.activities.MainActivity;
 
 public class CountdownManager {
 
-    private final long ORIGIN_TIME_IN_MILLIS;
+    private final static String FORMAT = "%02d:%02d";
 
     private final RoundManager roundManager;
-
-    private final TextView text1, text2, text3;
-
-    private CountDownTimer countDownTimer;
-
     private final ProgressBar progressBar;
-    private double  progress = 10000;
+    private final long ORIGIN_TIME_IN_MILLIS;
     private final double progressPart;
 
+    private CountDownTimer countDownTimer;
+    private double progress = 10000;
+    private long timeLeftInMillis;
     private boolean isRunning;
 
-    private long timeLeftInMillis;
     private final TextView textViewCountdown;
+    private final TextView text1, text2, text3;
 
-    public CountdownManager(MainActivity mainActivity, ProgressBar progressBar, TextView textViewCountdown, long timeLeftInMillis) {
-        this.progressBar = progressBar;
-        this.textViewCountdown = textViewCountdown;
-        this.timeLeftInMillis = timeLeftInMillis;
+    public CountdownManager(MainActivity mainActivity, long timeLeftInMillis) {
+        this.progressBar = mainActivity.getProgressBar();
+        this.textViewCountdown = mainActivity.getTextViewTimer();
         this.ORIGIN_TIME_IN_MILLIS = timeLeftInMillis;
+        this.progressPart = 10000 / ((double) ORIGIN_TIME_IN_MILLIS / 1000);
+        this.timeLeftInMillis = timeLeftInMillis;
         this.roundManager = MainActivity.getRoundManager();
+
         updateCountdownText();
-        progressBar.setProgress(10000);
-        progressPart = 10000 / ((double) timeLeftInMillis / 1000);
-        text1 = mainActivity.getText1();
-        text2 = mainActivity.getText2();
-        text3 = mainActivity.getText3();
+        this.progressBar.setProgress(10000);
+        this.text1 = mainActivity.getText1();
+        this.text2 = mainActivity.getText2();
+        this.text3 = mainActivity.getText3();
     }
 
     public void startTimer() {
@@ -77,15 +73,15 @@ public class CountdownManager {
         int minutes = (int) (timeLeftInMillis / 1000) / 60;
         int seconds = (int) (timeLeftInMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        String timeLeftFormatted = String.format(Locale.getDefault(), FORMAT, minutes, seconds);
 
         textViewCountdown.setText(timeLeftFormatted);
     }
 
     public void pauseTimer() {
-        try {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
-        } catch (NullPointerException ignored) {}
+        }
 
         isRunning = false;
     }
