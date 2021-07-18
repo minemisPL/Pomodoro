@@ -1,4 +1,4 @@
-package me.minemis.pomodoro.listeners;
+package me.minemis.pomodoro.listeners.main;
 
 import android.content.Intent;
 import android.view.View;
@@ -20,3 +20,4 @@ public class TextTimerListener implements View.OnClickListener {
         mainActivity.startActivity(intent);
     }
 }
+

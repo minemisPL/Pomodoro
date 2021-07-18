@@ -10,10 +10,12 @@ import android.widget.TextView;
 
 import me.minemis.pomodoro.CountdownManager;
 import me.minemis.pomodoro.R;
-import me.minemis.pomodoro.Time;
-import me.minemis.pomodoro.listeners.ImageButtonResetListener;
-import me.minemis.pomodoro.listeners.ImageButtonStartPauseListener;
-import me.minemis.pomodoro.listeners.TextTimerListener;
+import me.minemis.pomodoro.RoundManager;
+import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.listeners.main.ButtonResetListener;
+import me.minemis.pomodoro.listeners.main.ButtonStartPauseListener;
+import me.minemis.pomodoro.listeners.main.NextButtonListener;
+import me.minemis.pomodoro.listeners.main.TextTimerListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,50 +25,85 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnNext;
     private ProgressBar progressBar;
     private TextView text1, text2, text3;
+    private TextView txtCurrentState;
 
     private CountdownManager countdownManager;
+
+    @SuppressLint("StaticFieldLeak")
+    private static MainActivity instance;
+    private static RoundManager roundManager;
+
+    public MainActivity() {
+        super();
+        instance = this;
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        assignValues();
 
-        textViewTimer = findViewById(R.id.txt_timer);
-        btnStartPause = findViewById(R.id.btn_start);
-        btnReset = findViewById(R.id.btn_reset);
-        progressBar = findViewById(R.id.progress_bar);
-        btnNext = findViewById(R.id.btn_next_phase);
-
-        text1 = findViewById(R.id.textView);
-        text2 = findViewById(R.id.textView2);
-        text3 = findViewById(R.id.textView3);
-
-        makeNewCountdownManager(25);
-
-        Time.setMinutes(40);
-
-        btnNext.setOnClickListener(v -> {
-            countdownManager.resetTimer();
-            countdownManager = null;
-            btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
-            makeNewCountdownManager(Time.getMinutes());
-        });
+        roundManager.nextRound(false);
 
     }
 
-    public void makeNewCountdownManager(int minutes) {
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void makeNewCountdownManager(State state, boolean setStart) {
 
-        countdownManager = new CountdownManager(this, progressBar, textViewTimer, minutes * 60 * 1000); //1500000
+        if (!(countdownManager == null)){
+            countdownManager.pauseTimer();
+            countdownManager = null;
+        }
 
-        btnStartPause.setOnClickListener(new ImageButtonStartPauseListener(this, countdownManager));
-        btnReset.setOnClickListener(new ImageButtonResetListener(this, countdownManager));
+        int time =          roundManager.getTime(state);
 
-        textViewTimer.setOnClickListener(new TextTimerListener(this));
+        countdownManager =  new CountdownManager(this, progressBar, textViewTimer, time * 60 * 1000); //1500000
+
+        btnNext             .setOnClickListener(new NextButtonListener(instance, roundManager, countdownManager));
+        btnStartPause       .setOnClickListener(new ButtonStartPauseListener(MainActivity.this, countdownManager));
+        btnReset            .setOnClickListener(new ButtonResetListener(MainActivity.this, countdownManager));
+
+        if (setStart) {
+            btnStartPause   .setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
+            countdownManager.startTimer();
+            return;
+        }
+        btnStartPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
+    }
+
+    private void assignValues() {
+        roundManager =      new RoundManager(this);
+
+        textViewTimer =     findViewById(R.id.txt_timer);
+        btnStartPause =     findViewById(R.id.btn_start);
+        btnReset =          findViewById(R.id.btn_reset);
+        progressBar =       findViewById(R.id.progress_bar);
+        btnNext =           findViewById(R.id.btn_next_phase);
+        txtCurrentState =   findViewById(R.id.txt_current_state);
+
+        text1 =             findViewById(R.id.textView);
+        text2 =             findViewById(R.id.textView2);
+        text3 =             findViewById(R.id.textView3);
+
+        textViewTimer       .setOnClickListener(new TextTimerListener(this));
+    }
+
+    public TextView getTextViewTimer() {
+        return textViewTimer;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
     }
 
     public ImageButton getBtnStartPause() {
         return btnStartPause;
+    }
+
+    public TextView getTxtCurrentState() {
+        return txtCurrentState;
     }
 
     public TextView getText1() {
@@ -81,4 +118,11 @@ public class MainActivity extends AppCompatActivity {
         return text3;
     }
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
+    public static RoundManager getRoundManager() {
+        return roundManager;
+    }
 }

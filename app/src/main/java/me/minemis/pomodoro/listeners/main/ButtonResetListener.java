@@ -1,4 +1,4 @@
-package me.minemis.pomodoro.listeners;
+package me.minemis.pomodoro.listeners.main;
 
 import android.annotation.SuppressLint;
 import android.view.View;
@@ -8,13 +8,13 @@ import me.minemis.pomodoro.CountdownManager;
 import me.minemis.pomodoro.R;
 import me.minemis.pomodoro.activities.MainActivity;
 
-public class ImageButtonResetListener implements View.OnClickListener {
+public class ButtonResetListener implements View.OnClickListener {
 
     private final MainActivity mainActivity;
     private final CountdownManager countdownManager;
     private final ImageButton btnStartPause;
 
-    public ImageButtonResetListener(MainActivity mainActivity, CountdownManager countdownManager) {
+    public ButtonResetListener(MainActivity mainActivity, CountdownManager countdownManager) {
         this.mainActivity = mainActivity;
         this.countdownManager = countdownManager;
 
