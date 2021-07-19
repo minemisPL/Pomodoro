@@ -3,13 +3,10 @@ package me.minemis.pomodoro.listeners.main;
 import android.os.Build;
 import android.os.Handler;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
-
-import org.w3c.dom.Text;
 
 import java.util.Locale;
 
@@ -53,7 +50,7 @@ public class NextButtonListener implements View.OnClickListener {
     private void next(State state) {
         canPass = false;
 
-        int time = roundManager.getTime(state);
+        int time = roundManager.getValue(state);
 
         if (!(countdownManager == null)) {
             countdownManager.pauseTimer();
@@ -61,7 +58,6 @@ public class NextButtonListener implements View.OnClickListener {
 
         progressBar.setProgress(10000);
         timerText.setText(String.format(Locale.getDefault(), "%02d:00", time));
-        System.out.print(String.format(Locale.getDefault(), "%02d:00", time) + "pizza");
 
         new Handler().postDelayed(() -> {
             MainActivity.getRoundManager().nextRound(true);

@@ -11,7 +11,8 @@ import me.minemis.pomodoro.activities.MainActivity;
 public enum State {
     FOCUS(25, () -> MainActivity.getInstance().getResources().getString(R.string.focus)),
     SHORT_BREAK(5, () -> MainActivity.getInstance().getResources().getString(R.string.short_brake)),
-    LONG_BREAK(10, () -> MainActivity.getInstance().getResources().getString(R.string.long_brake));
+    LONG_BREAK(10, () -> MainActivity.getInstance().getResources().getString(R.string.long_brake)),
+    ROUNDS(4, () -> MainActivity.getInstance().getResources().getString(R.string.rounds));
 
     private final int defaultValue;
     private final Supplier<String> supplier;

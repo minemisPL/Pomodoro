@@ -30,6 +30,6 @@ public class SliderListener implements Slider.OnChangeListener {
         int intValue = (int) value;
 
         txtSliderValue.setText(String.valueOf(intValue));
-        roundManager.setTime(this.state, intValue);
+        roundManager.setValue(this.state, intValue);
     }
 }

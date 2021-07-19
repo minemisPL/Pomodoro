@@ -8,10 +8,10 @@ import me.minemis.pomodoro.activities.MainActivity;
 public class RoundManager {
 
     private final MainActivity mainActivity;
-    private int numberOfRounds = 4;
-    private int currentRound = 1;
+    private final Map<State, Integer> valueMap = new HashMap<>();
     private State currentState = State.SHORT_BREAK;
-    private final Map<State, Integer> timeMap = new HashMap<>();
+    private int currentRound = 1;
+    private int numberOfSeries = 1;
 
     public RoundManager(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -21,6 +21,10 @@ public class RoundManager {
         if (currentRound > getRealRounds()) {
             currentRound = 1;
         }
+
+        System.out.println("Current round: " + currentRound);
+        System.out.println("getValue(State.ROUNDS) result: " + getValue(State.ROUNDS));
+
 
         currentState = getNextState();
         mainActivity.makeNewCountdownManager(currentState, setStart);
@@ -39,29 +43,32 @@ public class RoundManager {
         return State.SHORT_BREAK;
     }
 
-    public void setNumberOfRounds(int numberOfRounds) {
-        this.numberOfRounds = numberOfRounds;
+    public void resetCurrentRound() {
+        if (currentState == State.FOCUS) {
+            currentRound = 0;
+            return;
+        }
+        currentRound = 1;
     }
 
     public State getCurrentState() {
         return currentState;
     }
 
-    int getRealRounds() {
-        return numberOfRounds * 2;
+    private int getRealRounds() {
+        return getValue(State.ROUNDS) * 2;
     }
 
-    public void setTime(State state, int value) {
-        timeMap.put(state, value);
+    public void setValue(State state, int value) {
+        valueMap.put(state, value);
     }
 
-    public int getTime(State state) {
-        Integer value = timeMap.get(state);
+    public int getValue(State state) {
+        Integer value = valueMap.get(state);
 
         if (value == null) {
             return state.getDefaultValue();
         }
-
         return value;
     }
 }

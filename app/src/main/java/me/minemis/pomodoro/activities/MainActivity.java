@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             countdownManager = null;
         }
 
-        int time =          roundManager.getTime(state);
+        int time =          roundManager.getValue(state);
 
         countdownManager =  new CountdownManager(this, time * 60 * 1000); //1500000
 

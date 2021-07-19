@@ -16,10 +16,10 @@ import me.minemis.pomodoro.listeners.choosetime.SliderListener;
 
 public class ChooseTimeActivity extends AppCompatActivity {
 
-    private Slider sliderWork, sliderBreak, sliderLongBreak;
-    private TextView txtFocusValue, txtBreakValue, txtLongBreakValue;
+    private Slider sliderWork, sliderBreak, sliderLongBreak, sliderRounds;
+    private TextView txtFocusValue, txtBreakValue, txtLongBreakValue, txtRounds;
     private RoundManager roundManager;
-    private int focusTime, breakTime, longBreakTime;
+    private int focusTime, breakTime, longBreakTime, numberOfRounds;
     private static boolean changed;
 
     @Override
@@ -55,6 +55,10 @@ public class ChooseTimeActivity extends AppCompatActivity {
                 }   break;
         }
 
+        if ((int) sliderRounds.getValue() != numberOfRounds) {
+            roundManager.resetCurrentRound();
+        }
+
         if (changed) {
             MainActivity.getInstance().makeNewCountdownManager(state, false);
         }
@@ -69,24 +73,26 @@ public class ChooseTimeActivity extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * .8), (int) (height * .6));
+        getWindow().setLayout((int) (width * .8), (int) (height * .8));
     }
 
     private void assignValues() {
         roundManager =      MainActivity.getRoundManager();
 
-        focusTime =         roundManager.getTime(State.FOCUS);
-        breakTime =         roundManager.getTime(State.SHORT_BREAK);
-        longBreakTime =     roundManager.getTime(State.LONG_BREAK);
-
+        focusTime =         roundManager.getValue(State.FOCUS);
+        breakTime =         roundManager.getValue(State.SHORT_BREAK);
+        longBreakTime =     roundManager.getValue(State.LONG_BREAK);
+        numberOfRounds =    roundManager.getValue(State.ROUNDS);
 
         sliderWork =        findViewById(R.id.slider_work);
         sliderBreak =       findViewById(R.id.slider_break);
         sliderLongBreak =   findViewById(R.id.slider_long_brake);
+        sliderRounds =      findViewById(R.id.slider_rounds);
 
         txtFocusValue =     findViewById(R.id.txt_slider_work_value);
         txtBreakValue =     findViewById(R.id.txt_slider_brake);
         txtLongBreakValue = findViewById(R.id.txt_slider_long_brake);
+        txtRounds =         findViewById(R.id.txt_slider_rounds);
 
         txtFocusValue       .setText(String.valueOf(focusTime));
         sliderWork          .setValue(focusTime);
@@ -97,9 +103,13 @@ public class ChooseTimeActivity extends AppCompatActivity {
         txtLongBreakValue   .setText(String.valueOf(longBreakTime));
         sliderLongBreak     .setValue(longBreakTime);
 
+        txtRounds           .setText(String.valueOf(numberOfRounds));
+        sliderRounds        .setValue(numberOfRounds);
+
         sliderWork          .addOnChangeListener(new SliderListener(this, State.FOCUS));
         sliderBreak         .addOnChangeListener(new SliderListener(this, State.SHORT_BREAK));
         sliderLongBreak     .addOnChangeListener(new SliderListener(this, State.LONG_BREAK));
+        sliderRounds        .addOnChangeListener(new SliderListener(this, State.ROUNDS));
     }
 
     public RoundManager getRoundManager() {
@@ -111,6 +121,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
             case FOCUS:         return txtFocusValue;
             case SHORT_BREAK:   return txtBreakValue;
             case LONG_BREAK:    return txtLongBreakValue;
+            case ROUNDS:        return txtRounds;
         }
         return null;
     }

@@ -130,4 +130,46 @@
             app:labelBehavior="gone" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/layout_slider_rounds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/layout_slider_long_break"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/layout_slider_long_break"
+        app:layout_constraintTop_toBottomOf="@+id/layout_slider_long_break">
+
+        <TextView
+            android:id="@+id/txt_slider_rounds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="10" />
+
+        <TextView
+            android:id="@+id/txt_long_rounds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txt_slider_rounds"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/rounds" />
+
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_rounds"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/txt_slider_rounds"
+            android:layout_margin="30dp"
+            android:layout_marginTop="50dp"
+            android:valueFrom="2"
+            android:valueTo="12"
+            android:value="4"
+
+            app:labelBehavior="gone" />
+    </RelativeLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
