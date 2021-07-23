@@ -47,6 +47,7 @@ public class NextButtonListener implements View.OnClickListener {
         setStateText(state);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void next(State state) {
         canPass = false;
 
@@ -60,7 +61,7 @@ public class NextButtonListener implements View.OnClickListener {
         timerText.setText(String.format(Locale.getDefault(), "%02d:00", time));
 
         new Handler().postDelayed(() -> {
-            MainActivity.getRoundManager().nextRound(true);
+            roundManager.nextRound(true);
             canPass = true;
         }, 1000);
     }

@@ -5,4 +5,6 @@
     <string name="short_brake">Short Brake</string>
     <string name="long_brake">Long Brake</string>
     <string name="rounds">Rounds</string>
+    <string name="reset">Reset</string>
+    <string name="total">Total</string>
 </resources>

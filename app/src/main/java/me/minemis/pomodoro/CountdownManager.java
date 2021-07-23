@@ -1,8 +1,12 @@
 package me.minemis.pomodoro;
 
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.Locale;
 
@@ -60,9 +64,17 @@ public class CountdownManager {
                 progressBar.setProgress((int) progress);
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onFinish() {
-                roundManager.nextRound(true);
+                int time = roundManager.getValue(roundManager.getNextState());
+
+                progressBar.setProgress(10000);
+                textViewCountdown.setText(String.format(Locale.getDefault(), "%02d:00", time));
+
+                new Handler().postDelayed(() -> {
+                    roundManager.nextRound(true);
+                }, 1000);
             }
         }.start();
 

@@ -1,5 +1,9 @@
 package me.minemis.pomodoro;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,24 +15,46 @@ public class RoundManager {
     private final Map<State, Integer> valueMap = new HashMap<>();
     private State currentState = State.SHORT_BREAK;
     private int currentRound = 1;
-    private int numberOfSeries = 1;
+    private int totalRounds = 0;
+    private int realRound = 0;
 
     public RoundManager(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+        putDefaults(State.FOCUS, State.SHORT_BREAK, State.LONG_BREAK, State.ROUNDS);
     }
 
+    private void putDefaults(State... states) {
+        for (State state : states) {
+            valueMap.put(state, state.getDefaultValue());
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void nextRound(boolean setStart) {
+
+        //kinda shitty ale nie mamy czasu na nic lepszego
+
         if (currentRound > getRealRounds()) {
             currentRound = 1;
         }
 
-        System.out.println("Current round: " + currentRound);
-        System.out.println("getValue(State.ROUNDS) result: " + getValue(State.ROUNDS));
+        if (currentState == State.LONG_BREAK) {
+            realRound = 0;
+        }
 
+        if  (realRound > getRealRounds()) {
+            realRound = 0;
+        }
+
+        if (currentState != State.FOCUS) {
+            realRound++;
+            totalRounds++;
+        }
 
         currentState = getNextState();
         mainActivity.makeNewCountdownManager(currentState, setStart);
         currentRound++;
+
     }
 
     public State getNextState() {
@@ -44,11 +70,16 @@ public class RoundManager {
     }
 
     public void resetCurrentRound() {
-        if (currentState == State.FOCUS) {
-            currentRound = 0;
-            return;
+        currentRound = currentState == State.FOCUS ? 1 : 0;
+    }
+    public void resetRealRound() {
+        if (realRound * 2 > getRealRounds()){
+            realRound = 1;
         }
-        currentRound = 1;
+    }
+
+    public Map<State, Integer> getValueMap() {
+        return valueMap;
     }
 
     public State getCurrentState() {
@@ -57,6 +88,14 @@ public class RoundManager {
 
     private int getRealRounds() {
         return getValue(State.ROUNDS) * 2;
+    }
+
+    public int getTotalRounds() {
+        return totalRounds;
+    }
+
+    public String getWhichRound() {
+        return realRound + "/" + getValue(State.ROUNDS);
     }
 
     public void setValue(State state, int value) {

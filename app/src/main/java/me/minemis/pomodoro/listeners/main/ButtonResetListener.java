@@ -14,9 +14,9 @@ public class ButtonResetListener implements View.OnClickListener {
     private final CountdownManager countdownManager;
     private final ImageButton btnStartPause;
 
-    public ButtonResetListener(MainActivity mainActivity, CountdownManager countdownManager) {
+    public ButtonResetListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        this.countdownManager = countdownManager;
+        this.countdownManager = mainActivity.getCountdownManager();
 
         btnStartPause = mainActivity.getBtnStartPause();
     }
