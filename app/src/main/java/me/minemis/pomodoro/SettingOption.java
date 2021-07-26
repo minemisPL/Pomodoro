@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 import me.minemis.pomodoro.activities.MainActivity;
 
-public enum State {
+public enum SettingOption {
     FOCUS(25, () -> MainActivity.getInstance().getResources().getString(R.string.focus)),
     SHORT_BREAK(5, () -> MainActivity.getInstance().getResources().getString(R.string.short_brake)),
     LONG_BREAK(10, () -> MainActivity.getInstance().getResources().getString(R.string.long_brake)),
@@ -17,7 +17,7 @@ public enum State {
     private final int defaultValue;
     private final Supplier<String> supplier;
 
-    State(int defaultValue, Supplier<String> supplier) {
+    SettingOption(int defaultValue, Supplier<String> supplier) {
         this.defaultValue = defaultValue;
         this.supplier = supplier;
     }

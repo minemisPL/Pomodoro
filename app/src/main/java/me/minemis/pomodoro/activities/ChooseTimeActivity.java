@@ -14,7 +14,7 @@ import com.google.android.material.slider.Slider;
 
 import me.minemis.pomodoro.R;
 import me.minemis.pomodoro.RoundManager;
-import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.SettingOption;
 import me.minemis.pomodoro.listeners.choosetime.ResetButtonListener;
 import me.minemis.pomodoro.listeners.choosetime.SliderListener;
 
@@ -42,9 +42,9 @@ public class ChooseTimeActivity extends AppCompatActivity {
     protected void onStop() {
         changed = false;
 
-        State state = roundManager.getCurrentState();
+        SettingOption settingOption = roundManager.getCurrentState();
 
-        switch (state) {
+        switch (settingOption) {
 
             case FOCUS:
                 if ((int) sliderFocus.getValue() != focusTime) {
@@ -70,7 +70,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
         }
 
         if (changed) {
-            mainActivity.makeNewCountdownManager(state, false);
+            mainActivity.makeNewCountdownManager(settingOption, false);
         }
 
         super.onStop();
@@ -91,10 +91,10 @@ public class ChooseTimeActivity extends AppCompatActivity {
 
         roundManager =      MainActivity.getRoundManager();
 
-        focusTime =         roundManager.getValue(State.FOCUS);
-        breakTime =         roundManager.getValue(State.SHORT_BREAK);
-        longBreakTime =     roundManager.getValue(State.LONG_BREAK);
-        numberOfRounds =    roundManager.getValue(State.ROUNDS);
+        focusTime =         roundManager.getValue(SettingOption.FOCUS);
+        breakTime =         roundManager.getValue(SettingOption.SHORT_BREAK);
+        longBreakTime =     roundManager.getValue(SettingOption.LONG_BREAK);
+        numberOfRounds =    roundManager.getValue(SettingOption.ROUNDS);
 
         sliderFocus =        findViewById(R.id.slider_work);
         sliderBreak =       findViewById(R.id.slider_break);
@@ -118,27 +118,27 @@ public class ChooseTimeActivity extends AppCompatActivity {
         sliderLongBreak     .setValue(longBreakTime);
         sliderRounds        .setValue(numberOfRounds);
 
-        sliderFocus         .addOnChangeListener(new SliderListener(this, State.FOCUS));
-        sliderBreak         .addOnChangeListener(new SliderListener(this, State.SHORT_BREAK));
-        sliderLongBreak     .addOnChangeListener(new SliderListener(this, State.LONG_BREAK));
-        sliderRounds        .addOnChangeListener(new SliderListener(this, State.ROUNDS));
+        sliderFocus         .addOnChangeListener(new SliderListener(this, SettingOption.FOCUS));
+        sliderBreak         .addOnChangeListener(new SliderListener(this, SettingOption.SHORT_BREAK));
+        sliderLongBreak     .addOnChangeListener(new SliderListener(this, SettingOption.LONG_BREAK));
+        sliderRounds        .addOnChangeListener(new SliderListener(this, SettingOption.ROUNDS));
 
         resetButton         .setOnClickListener(new ResetButtonListener(this));
     }
 
     public void resetSliders() {
-        sliderFocus.setValue(State.FOCUS.getDefaultValue());
-        sliderBreak.setValue(State.SHORT_BREAK.getDefaultValue());
-        sliderLongBreak.setValue(State.LONG_BREAK.getDefaultValue());
-        sliderRounds.setValue(State.ROUNDS.getDefaultValue());
+        sliderFocus.setValue(SettingOption.FOCUS.getDefaultValue());
+        sliderBreak.setValue(SettingOption.SHORT_BREAK.getDefaultValue());
+        sliderLongBreak.setValue(SettingOption.LONG_BREAK.getDefaultValue());
+        sliderRounds.setValue(SettingOption.ROUNDS.getDefaultValue());
     }
 
     public RoundManager getRoundManager() {
         return roundManager;
     }
 
-    public TextView getTxtValue(State state) {
-        switch (state) {
+    public TextView getTxtValue(SettingOption settingOption) {
+        switch (settingOption) {
             case FOCUS:         return txtFocusValue;
             case SHORT_BREAK:   return txtBreakValue;
             case LONG_BREAK:    return txtLongBreakValue;

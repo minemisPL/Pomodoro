@@ -9,19 +9,19 @@ import androidx.annotation.RequiresApi;
 import com.google.android.material.slider.Slider;
 
 import me.minemis.pomodoro.RoundManager;
-import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.SettingOption;
 import me.minemis.pomodoro.activities.ChooseTimeActivity;
 
 public class SliderListener implements Slider.OnChangeListener {
 
     private final TextView txtSliderValue;
     private final RoundManager roundManager;
-    private final State state;
+    private final SettingOption settingOption;
 
-    public SliderListener(ChooseTimeActivity chooseTimeActivity, State state) {
-        this.txtSliderValue = chooseTimeActivity.getTxtValue(state);
+    public SliderListener(ChooseTimeActivity chooseTimeActivity, SettingOption settingOption) {
+        this.txtSliderValue = chooseTimeActivity.getTxtValue(settingOption);
         this.roundManager = chooseTimeActivity.getRoundManager();
-        this.state = state;
+        this.settingOption = settingOption;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -30,6 +30,6 @@ public class SliderListener implements Slider.OnChangeListener {
         int intValue = (int) value;
 
         txtSliderValue.setText(String.valueOf(intValue));
-        roundManager.setValue(this.state, intValue);
+        roundManager.setValue(this.settingOption, intValue);
     }
 }

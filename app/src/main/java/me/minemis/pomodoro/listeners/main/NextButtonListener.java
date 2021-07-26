@@ -12,7 +12,7 @@ import java.util.Locale;
 
 import me.minemis.pomodoro.CountdownManager;
 import me.minemis.pomodoro.RoundManager;
-import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.SettingOption;
 import me.minemis.pomodoro.activities.MainActivity;
 
 public class NextButtonListener implements View.OnClickListener {
@@ -41,17 +41,17 @@ public class NextButtonListener implements View.OnClickListener {
             return;
         }
 
-        State state = roundManager.getNextState();
+        SettingOption settingOption = roundManager.getNextState();
 
-        next(state);
-        setStateText(state);
+        next(settingOption);
+        setStateText(settingOption);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void next(State state) {
+    private void next(SettingOption settingOption) {
         canPass = false;
 
-        int time = roundManager.getValue(state);
+        int time = roundManager.getValue(settingOption);
 
         if (!(countdownManager == null)) {
             countdownManager.pauseTimer();
@@ -67,7 +67,7 @@ public class NextButtonListener implements View.OnClickListener {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setStateText(State state) {
-        txtState.setText(state.getStringValue());
+    private void setStateText(SettingOption settingOption) {
+        txtState.setText(settingOption.getStringValue());
     }
 }

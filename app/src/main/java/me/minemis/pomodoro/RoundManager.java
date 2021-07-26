@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,21 +13,14 @@ import me.minemis.pomodoro.activities.MainActivity;
 public class RoundManager {
 
     private final MainActivity mainActivity;
-    private final Map<State, Integer> valueMap = new HashMap<>();
-    private State currentState = State.SHORT_BREAK;
+    private final Map<SettingOption, Integer> settings = new HashMap<>();
+    private SettingOption currentState = SettingOption.SHORT_BREAK;
     private int currentRound = 1;
     private int totalRounds = 0;
     private int realRound = 0;
 
     public RoundManager(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        putDefaults(State.FOCUS, State.SHORT_BREAK, State.LONG_BREAK, State.ROUNDS);
-    }
-
-    private void putDefaults(State... states) {
-        for (State state : states) {
-            valueMap.put(state, state.getDefaultValue());
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -38,15 +32,15 @@ public class RoundManager {
             currentRound = 1;
         }
 
-        if (currentState == State.LONG_BREAK) {
+        if (currentState == SettingOption.LONG_BREAK) {
             realRound = 0;
         }
 
-        if  (realRound > getRealRounds()) {
+        if (realRound > getRealRounds()) {
             realRound = 0;
         }
 
-        if (currentState != State.FOCUS) {
+        if (currentState != SettingOption.FOCUS) {
             realRound++;
             totalRounds++;
         }
@@ -57,20 +51,20 @@ public class RoundManager {
 
     }
 
-    public State getNextState() {
-        if (currentState == State.SHORT_BREAK || currentState == State.LONG_BREAK) {
-            return State.FOCUS;
+    public SettingOption getNextState() {
+        if (currentState == SettingOption.SHORT_BREAK || currentState == SettingOption.LONG_BREAK) {
+            return SettingOption.FOCUS;
         }
 
         if (currentRound == getRealRounds()) {
-            return State.LONG_BREAK;
+            return SettingOption.LONG_BREAK;
         }
 
-        return State.SHORT_BREAK;
+        return SettingOption.SHORT_BREAK;
     }
 
     public void resetCurrentRound() {
-        currentRound = currentState == State.FOCUS ? 1 : 0;
+        currentRound = currentState == SettingOption.FOCUS ? 1 : 0;
     }
     public void resetRealRound() {
         if (realRound * 2 > getRealRounds()){
@@ -78,16 +72,16 @@ public class RoundManager {
         }
     }
 
-    public Map<State, Integer> getValueMap() {
-        return valueMap;
+    public Map<SettingOption, Integer> getSettings() {
+        return Collections.unmodifiableMap(settings);
     }
 
-    public State getCurrentState() {
+    public SettingOption getCurrentState() {
         return currentState;
     }
 
     private int getRealRounds() {
-        return getValue(State.ROUNDS) * 2;
+        return getValue(SettingOption.ROUNDS) * 2;
     }
 
     public int getTotalRounds() {
@@ -95,19 +89,22 @@ public class RoundManager {
     }
 
     public String getWhichRound() {
-        return realRound + "/" + getValue(State.ROUNDS);
+        return realRound + "/" + getValue(SettingOption.ROUNDS);
     }
 
-    public void setValue(State state, int value) {
-        valueMap.put(state, value);
+    public void setValue(SettingOption settingOption, int value) {
+        settings.put(settingOption, value);
     }
 
-    public int getValue(State state) {
-        Integer value = valueMap.get(state);
+    public int getValue(SettingOption settingOption) {
+        Integer value = settings.get(settingOption);
 
         if (value == null) {
-            return state.getDefaultValue();
+            int defaultValue = settingOption.getDefaultValue();
+            settings.put(settingOption, defaultValue);
+            return defaultValue;
         }
+
         return value;
     }
 }

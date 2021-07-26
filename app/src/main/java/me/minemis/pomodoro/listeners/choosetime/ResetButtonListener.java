@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.annotation.RequiresApi;
 
 import me.minemis.pomodoro.RoundManager;
-import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.SettingOption;
 import me.minemis.pomodoro.activities.ChooseTimeActivity;
 import me.minemis.pomodoro.activities.MainActivity;
 
@@ -22,9 +22,9 @@ public class ResetButtonListener implements View.OnClickListener {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
-        roundManager.getValueMap().forEach((k, value) -> roundManager.setValue(k, k.getDefaultValue()));
+        roundManager.getSettings().forEach((k, value) -> roundManager.setValue(k, k.getDefaultValue()));
         roundManager.resetCurrentRound();
-        MainActivity.getInstance().makeNewCountdownManager(State.FOCUS, false);
+        MainActivity.getInstance().makeNewCountdownManager(SettingOption.FOCUS, false);
         chooseTimeActivity.resetSliders();
     }
 }

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import me.minemis.pomodoro.CountdownManager;
 import me.minemis.pomodoro.R;
 import me.minemis.pomodoro.RoundManager;
-import me.minemis.pomodoro.State;
+import me.minemis.pomodoro.SettingOption;
 import me.minemis.pomodoro.listeners.main.ButtonResetListener;
 import me.minemis.pomodoro.listeners.main.ButtonStartPauseListener;
 import me.minemis.pomodoro.listeners.main.NextButtonListener;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onStop() {
-        roundManager.getValueMap().forEach(this::putValueToEditor);
+        roundManager.getSettings().forEach(this::putValueToEditor);
         editor.apply();
 
         super.onStop();
@@ -68,14 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void makeNewCountdownManager(State state, boolean setStart) {
+    public void makeNewCountdownManager(SettingOption settingOption, boolean setStart) {
 
         if (!(countdownManager == null)){
             countdownManager.pauseTimer();
             countdownManager = null;
         }
 
-        int time =          roundManager.getValue(state);
+        int time =          roundManager.getValue(settingOption);
 
         countdownManager =  new CountdownManager(this, time * 60 * 1000);
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         btnStartPause       .setOnClickListener(new ButtonStartPauseListener(MainActivity.this));
         btnReset            .setOnClickListener(new ButtonResetListener(MainActivity.this));
 
-        txtCurrentState.setText(state.getStringValue());
+        txtCurrentState.setText(settingOption.getStringValue());
 
         txtTotalRounds.setText(String.valueOf(roundManager.getTotalRounds()));
         txtWhichRound.setText(roundManager.getWhichRound());
@@ -98,17 +98,17 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadSettings() {
-        roundManager.getValueMap().forEach((k, v) -> setRMValues(k));
+        roundManager.getSettings().forEach((k, v) -> setRMValues(k));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setRMValues(State state) {
-        roundManager.setValue(state, sharedPreferences.getInt(state.getStringValue(), state.getDefaultValue()));
+    private void setRMValues(SettingOption settingOption) {
+        roundManager.setValue(settingOption, sharedPreferences.getInt(settingOption.getStringValue(), settingOption.getDefaultValue()));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void putValueToEditor(State state, Integer integer) {
-        editor.putInt(state.getStringValue(), integer);
+    private void putValueToEditor(SettingOption settingOption, Integer integer) {
+        editor.putInt(settingOption.getStringValue(), integer);
     }
 
     @SuppressLint("CommitPrefEdits")
